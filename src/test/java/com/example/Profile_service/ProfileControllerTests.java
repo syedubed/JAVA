@@ -1,5 +1,6 @@
 package com.example.Profile_service;
 
+import com.example.Profile_service.model.Profile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 

@@ -1,4 +1,4 @@
-package com.example.Profile_service;
+package com.example.Profile_service.model;
 
 public record Profile(Long id, String name , String email , String bio, String address, String mobileNumber) {
 

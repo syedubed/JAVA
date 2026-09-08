@@ -1,5 +1,9 @@
-package com.example.Profile_service;
+package com.example.Profile_service.controller;
 
+import com.example.Profile_service.model.Profile;
+import com.example.Profile_service.dto.ProfileRequest;
+import com.example.Profile_service.service.ProfileService;
+import com.example.Profile_service.dto.UpdateProfileRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;

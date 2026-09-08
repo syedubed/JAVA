@@ -1,4 +1,4 @@
-package com.example.Profile_service;
+package com.example.Profile_service.controller;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
