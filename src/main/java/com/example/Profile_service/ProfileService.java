@@ -32,7 +32,7 @@ public class ProfileService {
         return repository.saveNew(request);
     }
  // PUT
-    public Profile updateProfile(Long id, ProfileRequest request) {
+    public Profile updateProfile(Long id, UpdateProfileRequest request) {
         return repository.update(id, request)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,

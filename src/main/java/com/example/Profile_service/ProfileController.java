@@ -18,15 +18,6 @@ public class ProfileController {
         this.profileService = profileService;
     }
 
-    @GetMapping("/sample")
-    public Profile getSampleProfile() {
-        return new Profile(
-                1L,
-                "Ubaid",
-                "ubaid@example.com",
-                "Learning Java backend API development"
-        );
-    }
     @GetMapping("/{id}")
     public Profile getProfile(@PathVariable Long id) {
         return profileService.getProfile(id);
@@ -44,7 +35,7 @@ public class ProfileController {
     @PutMapping("/{id}")
     public Profile updateProfile(
             @PathVariable Long id,
-            @Valid @RequestBody ProfileRequest request) {
+            @Valid @RequestBody UpdateProfileRequest request) {
 
         return profileService.updateProfile(id, request);
     }

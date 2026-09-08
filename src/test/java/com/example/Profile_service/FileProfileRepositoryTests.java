@@ -28,7 +28,9 @@ class FileProfileRepositoryTests {
         Profile created = first.saveNew(new ProfileRequest(
                 "Ubaid",
                 "ubaid@example.com",
-                "Saved in a file"
+                "Saved in a file",
+                "phoenix, Arizona",
+                "+16025550123"
         ));
 
         // ACT: create another repository using the same file.
@@ -47,15 +49,18 @@ class FileProfileRepositoryTests {
         Profile created = first.saveNew(new ProfileRequest(
                 "Ubaid",
                 "ubaid@example.com",
-                "Original bio"
+                "Original bio",
+                "Phoenix, Arizona",
+                "+16025550123"
         ));
 
         Profile updated = first.update(
                 created.id(),
-                new ProfileRequest(
+                new UpdateProfileRequest(
                         "Ubaid Updated",
                         "updated@example.com",
-                        "Updated bio"
+                        "Updated bio",
+                        "Tempe, Arizona"
                 )
         ).orElseThrow();
 
@@ -74,7 +79,9 @@ class FileProfileRepositoryTests {
         Profile created = first.saveNew(new ProfileRequest(
                 "Ubaid",
                 "ubaid@example.com",
-                "Profile to delete"
+                "Profile to delete",
+                "Phoenix, Arizona",
+                "+16025550123"
         ));
 
         assertTrue(first.deleteById(created.id()));
@@ -87,7 +94,9 @@ class FileProfileRepositoryTests {
         Profile next = second.saveNew(new ProfileRequest(
                 "Alex",
                 "alex@example.com",
-                "New profile"
+                "New profile",
+                "Scottsdale, Arizona",
+                "+16025550123"
         ));
 
         // Deleting and reopening must not reset the ID counter.

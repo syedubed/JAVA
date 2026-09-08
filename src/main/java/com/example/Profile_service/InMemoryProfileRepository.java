@@ -20,7 +20,9 @@ public class InMemoryProfileRepository {
                 id,
                 request.name(),
                 request.email(),
-                request.bio()
+                request.bio(),
+                request.address(),
+                request.mobileNumber()
         );
 
         profiles.put(id, profile);
@@ -38,7 +40,9 @@ public class InMemoryProfileRepository {
                         key,
                         request.name(),
                         request.email(),
-                        request.bio()
+                        request.bio(),
+                        request.address(),
+                        request.mobileNumber()
                 )
         );
 

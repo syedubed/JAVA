@@ -41,7 +41,9 @@ public class FileProfileRepository {
                 id,
                 request.name(),
                 request.email(),
-                request.bio()
+                request.bio(),
+                request.address(),
+                request.mobileNumber()
         );
 
         List<Profile> profiles = new ArrayList<>(stored.profiles());
@@ -61,18 +63,23 @@ public class FileProfileRepository {
     // UPDATE
     public synchronized Optional<Profile> update(
             Long id,
-            ProfileRequest request) {
+            UpdateProfileRequest request) {
 
         StoredProfiles stored = readFile();
         List<Profile> profiles = new ArrayList<>(stored.profiles());
 
         for (int index = 0; index < profiles.size(); index++) {
-            if (profiles.get(index).id().equals(id)) {
+
+            Profile currentProfile = profiles.get(index);
+
+            if (currentProfile.id().equals(id)) {
                 Profile updated = new Profile(
                         id,
                         request.name(),
                         request.email(),
-                        request.bio()
+                        request.bio(),
+                        request.address(),
+                        currentProfile.mobileNumber()
                 );
 
                 profiles.set(index, updated);

@@ -40,7 +40,9 @@ class ProfileControllerTests {
                 {
                   "name": "Ubaid",
                   "email": "ubaid@example.com",
-                  "bio": "Learning automated testing"
+                  "bio": "Learning automated testing",
+                   "address": "Phoenix, Arizona",
+                   "mobileNumber": "+16025550123"
                 }
                 """;
 
@@ -58,7 +60,11 @@ class ProfileControllerTests {
                 .jsonPath("$.name").isEqualTo("Ubaid")
                 .jsonPath("$.email").isEqualTo("ubaid@example.com")
                 .jsonPath("$.bio")
-                .isEqualTo("Learning automated testing");
+                .isEqualTo("Learning automated testing")
+                .jsonPath("$.address")
+                .isEqualTo("Phoenix, Arizona")
+                .jsonPath("$.mobileNumber")
+                .isEqualTo("+16025550123");
     }
 
     @Test
@@ -70,12 +76,14 @@ class ProfileControllerTests {
                     {
                       "name": "",
                       "email": "ubaid@example.com",
-                      "bio": "Testing validation"
+                      "bio": "Testing validation",
+                            "address": "Phoenix, Arizona",
+                                "mobileNumber": "+16025550123"
                     }
                     """)
                 .exchange()
                 .expectStatus().isBadRequest();
-    }
+                }
 
     //test case for the PUT Method
 
@@ -89,7 +97,10 @@ class ProfileControllerTests {
                     {
                       "name": "Alex",
                       "email": "alex@example.com",
-                      "bio": "Original bio"
+                      "bio": "Original bio",
+                          "address": "Phoenix, Arizona",
+                          "mobileNumber": "+16025550123"
+                      
                     }
                     """)
                 .exchange()
@@ -106,18 +117,24 @@ class ProfileControllerTests {
                 created.id(),
                 "Alex Updated",
                 "updated@example.com",
-                "Updated bio"
+                "Updated bio",
+                "Tempe, Arizona",
+                created.mobileNumber()
         );
 
         // ACT: update the existing profile.
         client.put()
                 .uri("/api/profiles/{id}", created.id())
+                .header(
+                        "X-Correlation-ID","test-put-101"
+                )
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("""
                     {
                       "name": "Alex Updated",
                       "email": "updated@example.com",
-                      "bio": "Updated bio"
+                      "bio": "Updated bio",
+                        "address": "Tempe, Arizona"
                     }
                     """)
                 .exchange()
@@ -148,7 +165,9 @@ class ProfileControllerTests {
                     {
                       "name": "Alex",
                       "email": "alex@example.com",
-                      "bio": "Profile to delete"
+                      "bio": "Profile to delete",
+                      "address": "Phoenix, Arizona",
+                      "mobileNumber": "+16025550123"
                     }
                     """)
                 .exchange()
@@ -195,7 +214,8 @@ class ProfileControllerTests {
                     {
                       "name": "Alex",
                       "email": "alex@example.com",
-                      "bio": "This profile does not exist"
+                      "bio": "This profile does not exist",
+                      "address": "Phoenix, Arizona"
                     }
                     """)
                 .exchange()
