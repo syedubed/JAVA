@@ -1,6 +1,7 @@
-package com.example.Profile_service;
+package com.example.Profile_service.repository;
 
-import org.springframework.stereotype.Repository;
+import com.example.Profile_service.dto.ProfileRequest;
+import com.example.Profile_service.model.Profile;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;

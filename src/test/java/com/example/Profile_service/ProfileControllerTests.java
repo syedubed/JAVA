@@ -1,5 +1,6 @@
 package com.example.Profile_service;
 
+import com.example.Profile_service.model.Profile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -11,11 +12,18 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.client.RestTestClient;
 
+import com.example.Profile_service.dto.TokenResponse;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.http.HttpHeaders;
+
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest(
+        webEnvironment =
+                SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 @AutoConfigureRestTestClient
 class ProfileControllerTests {
 
@@ -49,6 +57,10 @@ class ProfileControllerTests {
         // ACT: send the request.
         client.post()
                 .uri("/api/profiles")
+                .header(
+                        HttpHeaders.AUTHORIZATION,
+                        authorizationHeader
+                )
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody)
                 .exchange()
@@ -71,6 +83,7 @@ class ProfileControllerTests {
     void shouldRejectBlankName() {
         client.post()
                 .uri("/api/profiles")
+                .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("""
                     {
@@ -83,7 +96,7 @@ class ProfileControllerTests {
                     """)
                 .exchange()
                 .expectStatus().isBadRequest();
-                }
+    }
 
     //test case for the PUT Method
 
@@ -92,6 +105,7 @@ class ProfileControllerTests {
         // ARRANGE: create a profile for this test.
         Profile created = client.post()
                 .uri("/api/profiles")
+                .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("""
                     {
@@ -125,6 +139,7 @@ class ProfileControllerTests {
         // ACT: update the existing profile.
         client.put()
                 .uri("/api/profiles/{id}", created.id())
+                .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
                 .header(
                         "X-Correlation-ID","test-put-101"
                 )
@@ -147,6 +162,7 @@ class ProfileControllerTests {
         // Verify the changes were actually saved.
         client.get()
                 .uri("/api/profiles/{id}", created.id())
+                .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Profile.class)
@@ -160,6 +176,7 @@ class ProfileControllerTests {
         // ARRANGE: create a profile to delete.
         Profile created = client.post()
                 .uri("/api/profiles")
+                .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("""
                     {
@@ -182,6 +199,7 @@ class ProfileControllerTests {
         // ACT: delete the created profile.
         client.delete()
                 .uri("/api/profiles/{id}", created.id())
+                .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
                 .exchange()
 
                 // ASSERT: successful deletion returns no content.
@@ -191,6 +209,7 @@ class ProfileControllerTests {
         // Verify that the profile no longer exists.
         client.get()
                 .uri("/api/profiles/{id}", created.id())
+                .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -201,6 +220,7 @@ class ProfileControllerTests {
     void shouldReturn404WhenGettingMissingProfile() {
         client.get()
                 .uri("/api/profiles/{id}", -1L)
+                .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -209,6 +229,7 @@ class ProfileControllerTests {
     void shouldReturn404WhenUpdatingMissingProfile() {
         client.put()
                 .uri("/api/profiles/{id}", -1L)
+                .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("""
                     {
@@ -226,7 +247,34 @@ class ProfileControllerTests {
     void shouldReturn404WhenDeletingMissingProfile() {
         client.delete()
                 .uri("/api/profiles/{id}", -1L)
+                .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
                 .exchange()
                 .expectStatus().isNotFound();
+    }
+
+
+    private String authorizationHeader;
+
+    @BeforeEach
+    void authenticate() {
+        TokenResponse response = client.post()
+                .uri("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("""
+                {
+                  "username": "admin",
+                  "password": "password"
+                }
+                """)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(TokenResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertNotNull(response);
+
+        authorizationHeader =
+                "Bearer " + response.accessToken();
     }
 }

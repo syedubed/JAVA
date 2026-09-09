@@ -1,5 +1,8 @@
-package com.example.Profile_service;
+package com.example.Profile_service.repository;
 
+import com.example.Profile_service.dto.ProfileRequest;
+import com.example.Profile_service.dto.UpdateProfileRequest;
+import com.example.Profile_service.model.Profile;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import tools.jackson.databind.json.JsonMapper;

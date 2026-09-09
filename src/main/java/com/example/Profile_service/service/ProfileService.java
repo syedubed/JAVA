@@ -1,5 +1,9 @@
-package com.example.Profile_service;
+package com.example.Profile_service.service;
 
+import com.example.Profile_service.dto.ProfileRequest;
+import com.example.Profile_service.dto.UpdateProfileRequest;
+import com.example.Profile_service.model.Profile;
+import com.example.Profile_service.repository.FileProfileRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

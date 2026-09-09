@@ -1,5 +1,9 @@
 package com.example.Profile_service;
 
+import com.example.Profile_service.dto.ProfileRequest;
+import com.example.Profile_service.dto.UpdateProfileRequest;
+import com.example.Profile_service.model.Profile;
+import com.example.Profile_service.repository.FileProfileRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import tools.jackson.databind.json.JsonMapper;

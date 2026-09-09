@@ -1,5 +1,9 @@
-package com.example.Profile_service;
+package com.example.Profile_service.controller;
 
+import com.example.Profile_service.model.Profile;
+import com.example.Profile_service.dto.ProfileRequest;
+import com.example.Profile_service.service.ProfileService;
+import com.example.Profile_service.dto.UpdateProfileRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -7,9 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/api/profiles")
+@SecurityRequirement(name = "bearerAuth")
 public class ProfileController {
 
     private final ProfileService profileService;
