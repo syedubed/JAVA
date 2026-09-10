@@ -5,10 +5,7 @@ import com.example.account_service.dto.CreateAccountRequest;
 import com.example.account_service.service.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -36,5 +33,17 @@ public class AccountController {
         return ResponseEntity
                 .created(location)
                 .body(createdAccount);
+    }
+
+
+    //GET
+    @GetMapping("/{id}")
+    public ResponseEntity<AccountResponse> getAccount(
+            @PathVariable Long id
+    ) {
+        AccountResponse account =
+                accountService.getAccount(id);
+
+        return ResponseEntity.ok(account);
     }
 }

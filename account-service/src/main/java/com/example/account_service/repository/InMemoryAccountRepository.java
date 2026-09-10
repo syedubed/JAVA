@@ -3,6 +3,7 @@ package com.example.account_service.repository;
 import com.example.account_service.model.Account;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -37,5 +38,9 @@ public class InMemoryAccountRepository {
                         account.accountNumber()
                                 .equalsIgnoreCase(accountNumber)
                 );
+    }
+            // TO GET
+    public Optional<Account> findById(Long id) {
+        return Optional.ofNullable(accounts.get(id));
     }
 }

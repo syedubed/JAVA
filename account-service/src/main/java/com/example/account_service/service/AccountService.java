@@ -2,6 +2,7 @@ package com.example.account_service.service;
 
 import com.example.account_service.dto.AccountResponse;
 import com.example.account_service.dto.CreateAccountRequest;
+import com.example.account_service.exception.AccountNotFoundException;
 import com.example.account_service.exception.DuplicateAccountNumberException;
 import com.example.account_service.model.Account;
 import com.example.account_service.model.AccountStatus;
@@ -52,5 +53,15 @@ public class AccountService {
                 account.accountType(),
                 account.status()
         );
+    }
+
+    public AccountResponse getAccount(Long id) {
+        Account account = accountRepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new AccountNotFoundException(id)
+                );
+
+        return toResponse(account);
     }
 }
