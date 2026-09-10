@@ -61,4 +61,11 @@ public class InMemoryAccountRepository {
         accounts.put(account.id(), account);
         return account;
     }
+
+    //delete Request
+    public boolean deleteById(Long id) {
+        return accounts.remove(id) != null;
+    }
+    
+
 }

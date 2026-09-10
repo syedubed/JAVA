@@ -102,4 +102,13 @@ public class AccountService {
 
         return toResponse(savedAccount);
     }
+
+    // delete
+    public void deleteAccount(Long id) {
+        boolean deleted = accountRepository.deleteById(id);
+
+        if (!deleted) {
+            throw new AccountNotFoundException(id);
+        }
+    }
 }
