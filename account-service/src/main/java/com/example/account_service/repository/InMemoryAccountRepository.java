@@ -66,6 +66,10 @@ public class InMemoryAccountRepository {
     public boolean deleteById(Long id) {
         return accounts.remove(id) != null;
     }
-    
+
+    public void deleteAll() {
+        accounts.clear();
+        nextId.set(0);
+    }
 
 }
