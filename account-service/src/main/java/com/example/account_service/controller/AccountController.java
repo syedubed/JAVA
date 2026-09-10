@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -46,4 +47,14 @@ public class AccountController {
 
         return ResponseEntity.ok(account);
     }
+
+    // GET ALL ACCOUNTS
+    @GetMapping
+    public ResponseEntity<List<AccountResponse>> getAllAccounts() {
+        List<AccountResponse> accounts =
+                accountService.getAllAccounts();
+
+        return ResponseEntity.ok(accounts);
+    }
+
 }

@@ -3,6 +3,8 @@ package com.example.account_service.repository;
 import com.example.account_service.model.Account;
 import org.springframework.stereotype.Repository;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -39,8 +41,17 @@ public class InMemoryAccountRepository {
                                 .equalsIgnoreCase(accountNumber)
                 );
     }
-            // TO GET
+            // TO GET by ID
     public Optional<Account> findById(Long id) {
         return Optional.ofNullable(accounts.get(id));
+    }
+
+    // to get all the accounts
+
+    public List<Account> findAll() {
+        return accounts.values()
+                .stream()
+                .sorted(Comparator.comparing(Account::id))
+                .toList();
     }
 }

@@ -9,6 +9,8 @@ import com.example.account_service.model.AccountStatus;
 import com.example.account_service.repository.InMemoryAccountRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AccountService {
 
@@ -54,7 +56,7 @@ public class AccountService {
                 account.status()
         );
     }
-
+ // get acc by ID
     public AccountResponse getAccount(Long id) {
         Account account = accountRepository
                 .findById(id)
@@ -63,5 +65,14 @@ public class AccountService {
                 );
 
         return toResponse(account);
+    }
+
+    //to get all accounts
+
+    public List<AccountResponse> getAllAccounts() {
+        return accountRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 }
