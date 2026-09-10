@@ -2,6 +2,7 @@ package com.example.account_service.controller;
 
 import com.example.account_service.dto.AccountResponse;
 import com.example.account_service.dto.CreateAccountRequest;
+import com.example.account_service.dto.UpdateAccountRequest;
 import com.example.account_service.service.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -55,6 +56,17 @@ public class AccountController {
                 accountService.getAllAccounts();
 
         return ResponseEntity.ok(accounts);
+    }
+ // PUT request to update data
+    @PutMapping("/{id}")
+    public ResponseEntity<AccountResponse> updateAccount(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateAccountRequest request
+    ) {
+        AccountResponse updatedAccount =
+                accountService.updateAccount(id, request);
+
+        return ResponseEntity.ok(updatedAccount);
     }
 
 }

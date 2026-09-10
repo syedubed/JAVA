@@ -2,6 +2,7 @@ package com.example.account_service.service;
 
 import com.example.account_service.dto.AccountResponse;
 import com.example.account_service.dto.CreateAccountRequest;
+import com.example.account_service.dto.UpdateAccountRequest;
 import com.example.account_service.exception.AccountNotFoundException;
 import com.example.account_service.exception.DuplicateAccountNumberException;
 import com.example.account_service.model.Account;
@@ -74,5 +75,31 @@ public class AccountService {
                 .stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    // PUT REQUEST TO UPdate
+
+    public AccountResponse updateAccount(
+            Long id,
+            UpdateAccountRequest request
+    ) {
+        Account currentAccount = accountRepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new AccountNotFoundException(id)
+                );
+
+        Account updatedAccount = new Account(
+                currentAccount.id(),
+                currentAccount.profileId(),
+                currentAccount.accountNumber(),
+                request.accountType(),
+                request.status()
+        );
+
+        Account savedAccount =
+                accountRepository.update(updatedAccount);
+
+        return toResponse(savedAccount);
     }
 }

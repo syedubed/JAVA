@@ -54,4 +54,11 @@ public class InMemoryAccountRepository {
                 .sorted(Comparator.comparing(Account::id))
                 .toList();
     }
+
+    // PUT REUQEST
+
+    public Account update(Account account) {
+        accounts.put(account.id(), account);
+        return account;
+    }
 }
