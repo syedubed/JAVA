@@ -1,5 +1,6 @@
 package com.example.account_service.service;
 
+import com.example.account_service.client.ProfileClient;
 import com.example.account_service.dto.AccountResponse;
 import com.example.account_service.dto.CreateAccountRequest;
 import com.example.account_service.dto.UpdateAccountRequest;
@@ -16,15 +17,20 @@ import java.util.List;
 public class AccountService {
 
     private final InMemoryAccountRepository accountRepository;
+    private final ProfileClient profileClient;
 
     public AccountService(
-            InMemoryAccountRepository accountRepository
+            InMemoryAccountRepository accountRepository,
+            ProfileClient profileClient
     ) {
         this.accountRepository = accountRepository;
+        this.profileClient = profileClient;
     }
 
     public AccountResponse createAccount(
-            CreateAccountRequest request
+            CreateAccountRequest request,
+            String authorizationHeader,
+            String correlationId
     ) {
         if (accountRepository.existsByAccountNumber(
                 request.accountNumber()
@@ -33,6 +39,13 @@ public class AccountService {
                     request.accountNumber()
             );
         }
+
+
+        profileClient.getProfile(
+                request.profileId(),
+                authorizationHeader,
+                correlationId
+        );
 
         Account newAccount = new Account(
                 null,

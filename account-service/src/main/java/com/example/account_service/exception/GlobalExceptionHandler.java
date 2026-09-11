@@ -66,6 +66,45 @@ public class GlobalExceptionHandler {
 
     //404 handler
 
+    @ExceptionHandler(ProfileNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleProfileNotFound(
+            ProfileNotFoundException exception,
+            HttpServletRequest request
+    ) {
+        ApiErrorResponse errorResponse = new ApiErrorResponse(
+                Instant.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                exception.getMessage(),
+                request.getRequestURI(),
+                Map.of()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(ProfileServiceUnavailableException.class)
+    public ResponseEntity<ApiErrorResponse>
+    handleProfileServiceUnavailable(
+            ProfileServiceUnavailableException exception,
+            HttpServletRequest request
+    ) {
+        ApiErrorResponse errorResponse = new ApiErrorResponse(
+                Instant.now(),
+                HttpStatus.SERVICE_UNAVAILABLE.value(),
+                HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase(),
+                exception.getMessage(),
+                request.getRequestURI(),
+                Map.of()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(errorResponse);
+    }
+
     @ExceptionHandler(AccountNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleAccountNotFound(
             AccountNotFoundException exception,

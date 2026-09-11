@@ -1,7 +1,9 @@
 package com.example.account_service;
 
+import com.example.account_service.client.ProfileClient;
 import com.example.account_service.dto.AccountResponse;
 import com.example.account_service.dto.CreateAccountRequest;
+import com.example.account_service.dto.ProfileResponse;
 import com.example.account_service.model.AccountType;
 import com.example.account_service.repository.InMemoryAccountRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,11 +11,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.client.RestTestClient;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(
         webEnvironment =
@@ -22,15 +29,30 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @AutoConfigureRestTestClient
 class AccountControllerTests {
 
+    private static final String TEST_TOKEN = "Bearer test-token";
+    private static final String TEST_CORRELATION_ID =
+            "test-correlation-id";
+
     @Autowired
     private RestTestClient client;
 
     @Autowired
     private InMemoryAccountRepository accountRepository;
 
+    @MockitoBean
+    private ProfileClient profileClient;
+
     @BeforeEach
-    void clearAccounts() {
+    void setUp() {
         accountRepository.deleteAll();
+
+        when(profileClient.getProfile(
+                anyLong(),
+                anyString(),
+                anyString()
+        )).thenAnswer(invocation ->
+                new ProfileResponse(invocation.getArgument(0))
+        );
     }
 
     @Test
@@ -45,6 +67,8 @@ class AccountControllerTests {
 
         client.post()
                 .uri("/api/accounts")
+                .header(HttpHeaders.AUTHORIZATION, TEST_TOKEN)
+                .header("X-Correlation-ID", TEST_CORRELATION_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody)
                 .exchange()
@@ -65,6 +89,8 @@ class AccountControllerTests {
     void shouldRejectBlankAccountNumber() {
         client.post()
                 .uri("/api/accounts")
+                .header(HttpHeaders.AUTHORIZATION, TEST_TOKEN)
+                .header("X-Correlation-ID", TEST_CORRELATION_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("""
                         {
@@ -95,6 +121,8 @@ class AccountControllerTests {
 
         client.post()
                 .uri("/api/accounts")
+                .header(HttpHeaders.AUTHORIZATION, TEST_TOKEN)
+                .header("X-Correlation-ID", TEST_CORRELATION_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody)
                 .exchange()
@@ -102,6 +130,8 @@ class AccountControllerTests {
 
         client.post()
                 .uri("/api/accounts")
+                .header(HttpHeaders.AUTHORIZATION, TEST_TOKEN)
+                .header("X-Correlation-ID", TEST_CORRELATION_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody)
                 .exchange()
@@ -301,6 +331,8 @@ class AccountControllerTests {
     ) {
         AccountResponse response = client.post()
                 .uri("/api/accounts")
+                .header(HttpHeaders.AUTHORIZATION, TEST_TOKEN)
+                .header("X-Correlation-ID", TEST_CORRELATION_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new CreateAccountRequest(
                         profileId,

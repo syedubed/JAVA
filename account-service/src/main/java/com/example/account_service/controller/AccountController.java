@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpHeaders;
+import java.util.UUID;
 
 import java.net.URI;
 import java.util.List;
@@ -23,17 +25,36 @@ import java.util.List;
 public class AccountController {
 
     private final AccountService accountService;
-
+    private static final String CORRELATION_ID_HEADER =
+            "X-Correlation-ID";
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
     @Operation(summary = "Create a new account")
     @PostMapping
     public ResponseEntity<AccountResponse> createAccount(
+            @RequestHeader(HttpHeaders.AUTHORIZATION)
+            String authorizationHeader,
+
+            @RequestHeader(
+                    value = CORRELATION_ID_HEADER,
+                    required = false
+            )
+            String correlationId,
+
             @Valid @RequestBody CreateAccountRequest request
     ) {
+        String effectiveCorrelationId =
+                correlationId == null || correlationId.isBlank()
+                        ? UUID.randomUUID().toString()
+                        : correlationId;
+
         AccountResponse createdAccount =
-                accountService.createAccount(request);
+                accountService.createAccount(
+                        request,
+                        authorizationHeader,
+                        effectiveCorrelationId
+                );
 
         URI location = URI.create(
                 "/api/accounts/" + createdAccount.id()
@@ -41,6 +62,10 @@ public class AccountController {
 
         return ResponseEntity
                 .created(location)
+                .header(
+                        CORRELATION_ID_HEADER,
+                        effectiveCorrelationId
+                )
                 .body(createdAccount);
     }
 
